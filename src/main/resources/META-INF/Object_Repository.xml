@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<repositories>
+	<repo page="landing">
+		<element name="userid">
+			<xpath>//input[@name='emailId']</xpath>
+			<id>emailId</id>
+		</element>
+		<element name="password">
+			<xpath>//input[@name='password']</xpath>
+			<css_selector>input[name='password']</css_selector>
+		</element>
+		<element name="login">
+			<xpath>//input[@type='submit'][@value='Login']</xpath>
+		</element>
+	</repo>
+	<repo page="header">
+		<element name="contactinfo">
+			<xpath>//div[@id='mm-user-info']/span[@class='contactName']</xpath>
+		</element>
+		<element name="admin-menu">
+			<xpath>//*[@id='manageNav']/a[text()='Admin']</xpath>
+		</element>
+		<element name="admin-header">
+			<xpath>//*[@id='global-header']</xpath>
+		</element>
+	</repo>
+</repositories>
