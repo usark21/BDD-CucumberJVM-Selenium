@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<project name="BDD_DEMO" default="runcukes" basedir=".">
+	<property environment="env" />
+	<property name="workspace-home" value="${basedir}" />
+	<property name="workspace-jars" value="${workspace-home}/lib" />
+	<property name="ext1.jars" value="${workspace-home}/selenium-2.31.0" />
+	<property name="ext2.jars" value="${workspace-home}/selenium-2.31.0/libs" />
+	<property name="build-destination" value="${workspace-home}/build" />
+	<property name="build-src" value="${workspace-home}/src" />
+	<path id="workspace-classpath">
+		<pathelement location="${build-destination}" />
+		<fileset dir="${ext1.jars}" includes="**.jar" />
+		<fileset dir="${ext2.jars}" includes="**.jar" />
+		<fileset dir="${workspace-jars}" includes="**/*.jar" />
+	</path>
+	<target name="setClassPath" unless="test.classpath">
+		<path id="classpath_jars">
+			<fileset dir="${workspace-jars}" includes="*.jar" />
+		</path>
+		<pathconvert pathsep=":" property="test.classpath" refid="classpath_jars" />
+	</target>
+	<target name="init" depends="setClassPath">
+		<tstamp>
+			<format property="start.time" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+		<condition property="ANT">
+			<os family="windows" />
+		</condition>
+	</target>
+	<target name="clean">
+		<delete dir="${build-destination}" />
+	</target>
+	<target name="compile" depends="clean">
+		<mkdir dir="${build-destination}" />
+		<javac srcdir="${build-src}" destdir="${build-destination}" classpathref="workspace-classpath" includeantruntime="false" />
+	</target>
+	<target name="runcukes" depends="compile">
+		<mkdir dir="target/cucumber-junit-report" />
+		<java classname="cucumber.api.cli.Main" fork="true" failonerror="false" resultproperty="cucumber.exitstatus">
+			<classpath refid="workspace-classpath" />
+			<arg value="--format" />
+			<arg value="junit:target/cucumber-junit-report/allcukes.xml" />
+			<arg value="--format" />
+			<arg value="pretty" />
+			<arg value="--format" />
+			<arg value="html:target/cucumber-html-report" />
+			<arg value="--glue" />
+			<arg value="com.ravi.cucumberjvm.appdemo" />
+			<arg value="src/main/resources" />
+			<arg value="--tags" />
+			<arg value="@login, @adminmenu" />
+		</java>
+		<junitreport todir="target/cucumber-junit-report">
+			<fileset dir="target/cucumber-junit-report">
+				<include name="allcukes.xml" />
+			</fileset>
+			<report format="frames" todir="target/cucumber-junit-report" />
+		</junitreport>
+		<fail message="Cucumber failed">
+			<condition>
+				<not>
+					<equals arg1="${cucumber.exitstatus}" arg2="0" />
+				</not>
+			</condition>
+		</fail>
+	</target>
+</project>
