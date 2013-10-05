@@ -1,4 +1,4 @@
 cucumberjvm-basic-framework
 ===========================
 
-A basic Cucumber-JVM framework to demonstrate Java Step Definitions with Selenium WebDriver for automating a common web application in BDD. 
+A basic BDD automation framework featuring Cucumber-JVM java step defs with Selenium WebDriver in testing a common web application.
