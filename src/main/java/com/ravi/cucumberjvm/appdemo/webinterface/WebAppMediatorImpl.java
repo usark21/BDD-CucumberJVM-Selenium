@@ -1,0 +1,84 @@
+package com.ravi.cucumberjvm.appdemo.webinterface;
+
+import static com.ravi.cucumberjvm.appdemo.util.ApplicationProperties.getProperty;
+import static com.ravi.cucumberjvm.appdemo.util.ObjectRepository.getElementProperty;
+
+import java.util.concurrent.TimeUnit;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class WebAppMediatorImpl implements WebAppMediator {
+	private static Logger LOGGER = Logger.getLogger(WebAppMediatorImpl.class);
+	private static final String LOG4J_FILE_PATH = System.getProperty("user.dir")+"//src//main//resources//META-INF//log4j.xml";
+	private static WebAppMediatorImpl webAppMediator;
+	private static WebDriver driver = null;
+	private static final String CONTACT_INFO = "contactinfo";
+	private static final String APP_URL = "appurl";
+	private static final String PASSWORD = "password";
+	private static final String USER_ID = "userid";
+	private static final String USER_NAME = "username";
+	private static final String LOGIN = "login";
+
+	private WebAppMediatorImpl() {
+	}
+
+	public static WebAppMediatorImpl getInstance() {
+		if (webAppMediator == null) {
+			webAppMediator = new WebAppMediatorImpl();
+			DOMConfigurator.configure(LOG4J_FILE_PATH);
+		}
+		return webAppMediator;
+	}
+
+	@Override
+	public void openBrowser(String browser) {
+		LOGGER.debug("Opening Browser " + browser);
+		driver = new SeleniumDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+
+	@Override
+	public void navigate(String url) {
+		LOGGER.debug("Naviating to " + url);
+		driver.get(url);
+	}
+
+	@Override
+	public boolean isElementPresent(String element) {
+		if (driver.findElements(By.xpath(getElementProperty(element)))
+				.size() > 0)
+			return true;
+		return false;
+	}
+
+	@Override
+	public void type(String text, String element) {
+		LOGGER.debug("Typing in " + text);
+		driver.findElement(By.xpath(getElementProperty(element)))
+				.sendKeys(text);
+	}
+	
+	@Override
+	public void click(String element) {
+		LOGGER.debug("Clicking on " + element);
+		driver.findElement(By.xpath(getElementProperty(element))).click();
+	}
+
+	@Override
+	public boolean isUserLoggedIn() {
+		return isElementPresent(CONTACT_INFO);
+	}
+
+	@Override
+	public void performDefaultLogin() {
+		LOGGER.debug("performing default login");
+		navigate(getProperty(APP_URL));
+		type(getProperty(USER_NAME), USER_ID);
+		type(getProperty(PASSWORD), PASSWORD);
+		click(LOGIN);
+	}
+}
