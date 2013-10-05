@@ -23,7 +23,7 @@ public class LoginTest {
 	}
 	
 	@Then("^I should be \"([^\"]*)\" to login$")
-	public void Then_login_should_be(String expectedResult){
+	public void I_should_be(String expectedResult){
 		LOGGER.debug("Login - "+ expectedResult);
 		Assert.assertEquals(expectedResult, webAppOrchestrate.isElementPresent("contactinfo")? "successfull": "failed");
 	}
