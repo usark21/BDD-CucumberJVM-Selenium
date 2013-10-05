@@ -12,12 +12,12 @@ import cucumber.api.java.en.Given;
 public class GenericStepDefs {
 
 	private static Logger LOGGER = Logger.getLogger(GenericStepDefs.class);
-	private WebAppMediator webAppOrchestrate = WebAppMediatorImpl.getInstance();
+	private WebAppMediator webAppMediator = WebAppMediatorImpl.getInstance();
 	
 	@And("^I click on \"([^\"]*)\"$")
 	public void I_Click_On(String object){
 		LOGGER.debug("Clicking on " + object);
-		webAppOrchestrate.click(object);
+		webAppMediator.click(object);
 	}
 	
 	@Given("^When Execute scenario is \"([^\"]*)\"$")
@@ -31,6 +31,6 @@ public class GenericStepDefs {
 	@And("^I enter \"([^\"]*)\" for \"([^\"]*)\" input$")
 	public void I_enter(String text, String object){
 		LOGGER.debug("Entering in "+ text +" value "+ object);
-		webAppOrchestrate.type(text, object);
+		webAppMediator.type(text, object);
 	}
 }
