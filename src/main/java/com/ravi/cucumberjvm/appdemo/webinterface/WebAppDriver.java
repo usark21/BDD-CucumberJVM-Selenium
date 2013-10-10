@@ -1,6 +1,6 @@
 package com.ravi.cucumberjvm.appdemo.webinterface;
 
-public interface WebAppMediator {
+public interface WebAppDriver {
 	void click(String element);
 	void openBrowser(String browser);
 	void navigate(String url);
