@@ -10,10 +10,10 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class WebAppMediatorImpl implements WebAppMediator {
-	private static Logger LOGGER = Logger.getLogger(WebAppMediatorImpl.class);
+public class WebAppDriverImpl implements WebAppDriver {
+	private static Logger LOGGER = Logger.getLogger(WebAppDriverImpl.class);
 	private static final String LOG4J_FILE_PATH = System.getProperty("user.dir")+"//src//main//resources//META-INF//log4j.xml";
-	private static WebAppMediatorImpl webAppMediator;
+	private static WebAppDriverImpl webAppDriver;
 	private static WebDriver driver = null;
 	private static final String CONTACT_INFO = "contactinfo";
 	private static final String APP_URL = "appurl";
@@ -22,15 +22,15 @@ public class WebAppMediatorImpl implements WebAppMediator {
 	private static final String USER_NAME = "username";
 	private static final String LOGIN = "login";
 
-	private WebAppMediatorImpl() {
+	private WebAppDriverImpl() {
 	}
 
-	public static WebAppMediatorImpl getInstance() {
-		if (webAppMediator == null) {
-			webAppMediator = new WebAppMediatorImpl();
+	public static WebAppDriverImpl getInstance() {
+		if (webAppDriver == null) {
+			webAppDriver = new WebAppDriverImpl();
 			DOMConfigurator.configure(LOG4J_FILE_PATH);
 		}
-		return webAppMediator;
+		return webAppDriver;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class WebAppMediatorImpl implements WebAppMediator {
 
 	@Override
 	public boolean isElementPresent(String element) {
-		if (driver.findElements(By.xpath(getElementProperty(element)))
+		if (driver.findElements(By.xpath(getElementProperty(element, "xpath")))
 				.size() > 0)
 			return true;
 		return false;
@@ -58,14 +58,14 @@ public class WebAppMediatorImpl implements WebAppMediator {
 	@Override
 	public void type(String text, String element) {
 		LOGGER.debug("Typing in " + text);
-		driver.findElement(By.xpath(getElementProperty(element)))
+		driver.findElement(By.xpath(getElementProperty(element,"xpath")))
 				.sendKeys(text);
 	}
 	
 	@Override
 	public void click(String element) {
 		LOGGER.debug("Clicking on " + element);
-		driver.findElement(By.xpath(getElementProperty(element))).click();
+		driver.findElement(By.xpath(getElementProperty(element,"xpath"))).click();
 	}
 
 	@Override
@@ -81,4 +81,5 @@ public class WebAppMediatorImpl implements WebAppMediator {
 		type(getProperty(PASSWORD), PASSWORD);
 		click(LOGIN);
 	}
+
 }
